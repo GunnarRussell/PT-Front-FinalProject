@@ -1,0 +1,57 @@
+.playingCard
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+
+    margin: 6px;
+
+    border-style: solid;
+    border-width: 0px;
+    border-radius: 8px;
+
+    width: 120px;
+    height: 168px;
+
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+
+    font-family: 'ChardCharacters';
+}
+
+.red
+{
+    color: red;
+}
+
+.black
+{
+    color: black;
+}
+
+.corner
+{
+    position: absolute;
+    top: 4%;
+    left: 8%;
+
+    font-family: 'ChardCharacters';
+    font-size: 30px;
+}
+
+.suit
+{
+    font-size: 100px;
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'ChardCharacters';
+}
+
+@font-face
+{
+  font-family: 'ChardCharacters';
+  src: url(../../fonts/ChardCharacters.TTF) format('truetype');
+}
