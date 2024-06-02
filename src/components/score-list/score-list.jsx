@@ -73,8 +73,7 @@ export default function ScoreList() {
                 //return the Score component and pass the state update functions to it as props
                 return(
                 <Score
-                username = {score.name}
-                score = {score.score}
+                score = {score}
                 updateScore = {updateScore}
                 deleteScore = {deleteScore}
 
@@ -86,8 +85,11 @@ export default function ScoreList() {
             )}
           </ListGroup>
 
+            <br />
+
         {/* Comment Form component */}
         <ScoreForm 
+          score = {99999}
           totalScores = {scores}
           createScore = {createScore}
         />
