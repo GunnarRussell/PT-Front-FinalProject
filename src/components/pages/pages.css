@@ -29,6 +29,18 @@
   font-size: 20px;
 }
 
+.left
+{
+  position: relative;
+  right: 25%;
+}
+
+.right
+{
+  position: relative;
+  left: 25%;
+}
+
 .tab-player
 {
   padding: 10px;
@@ -45,4 +57,20 @@
 .gap
 {
   height: 15vh;
+}
+
+.points-container
+{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  /* background-color: rgba(0, 0, 0, 0.083); */
+}
+
+.button
+{
+  width: 300px;
+  margin: 10px 5px;
 }

@@ -1,17 +1,49 @@
 import React, { useEffect, useState } from 'react';
 import './pages.css';
 import CardContainer from '../card-container/card-container';
+import Points from '../points/points.jsx';
 import Button from 'react-bootstrap/Button';
 
-export default function game() {
+export default function Game() {
 
-    let deck = [];
-    let playerHand = [];
-    let dealerHand = [];
+    //STATE HOOKS
+    //states are arrays of card objects
+    //setHand method can be used to change state
+    //default state is empty array
+    const [playerHand, setPlayerHand] = useState([]);
+    const [dealerHand, setDealerHand] = useState([]);
+    const [deck, setDeck] = useState([]);
+    const [playerPoints, setPlayerPoints] = useState(10);
+    const [dealerPoints, setDealerPoints] = useState(10);
+    
+    //EFFECT HOOK
+    //updates every render (since the dependency array listed afterwards is empty)
+    useEffect(() => 
+    { 
+        createDeck(2); // create deck
+        dealCard(setPlayerHand, 2); // deal cards to player
+        dealCard(setDealerHand, 2); // deal cards to dealer
+    }, []);
+
+    //updates whenever playerHand changes
+    useEffect(() =>
+    {
+        //set playerPoints to equal the total value of playerHand
+        setPlayerPoints(calcHandValue(playerHand));
+    }, [playerHand]);
+
+    useEffect(() =>
+    {
+        //set dealerPoints to equal the total value of dealerHand
+        setDealerPoints(calcHandValue(dealerHand));
+    }, [dealerHand]);
 
     function createDeck(times)
     {
+        console.log("Creating deck...")
+
         let x = 1;
+        let newDeck = [];
 
         //create card objects for each card in a poker deck, add it to deck array
 
@@ -21,62 +53,58 @@ export default function game() {
             for(let i = 2; i <= 9; i++)
             {
                 // 2 through 9
-                let card = {id: x++, num: i, suit: 'S'};
-                deck.push(card);
+                let card = {id: x++, num: i, value: i, suit: 'S'};
+                newDeck.push(card);
 
             }
-            deck.push({id: x++, num: '=', suit: 'S'}); // 10 (in the card font, '=' displays a single-character '10')
-            deck.push({id: x++, num: 'J', suit: 'S'}); // Jack
-            deck.push({id: x++, num: 'Q', suit: 'S'}); // Queen
-            deck.push({id: x++, num: 'K', suit: 'S'}); // King
-            deck.push({id: x++, num: 'A', suit: 'S'}); // Ace
+            newDeck.push({id: x++, num: '=', value: 10, suit: 'S'}); // 10 (in the card font, '=' displays a single-character '10')
+            newDeck.push({id: x++, num: 'J', value: 10, suit: 'S'}); // Jack
+            newDeck.push({id: x++, num: 'Q', value: 10, suit: 'S'}); // Queen
+            newDeck.push({id: x++, num: 'K', value: 10, suit: 'S'}); // King
+            newDeck.push({id: x++, num: 'A', value: 11, suit: 'S'}); // Ace
         
             //CLUBS CARDS:
             for(let i = 2; i <= 9; i++)
             {
-                let card = {id: x++, num: i, suit: 'C'};
-                deck.push(card);
+                let card = {id: x++, num: i, value: i, suit: 'C'};
+                newDeck.push(card);
             }
-            deck.push({id: x++, num: '=', suit: 'C'});
-            deck.push({id: x++, num: 'J', suit: 'C'});
-            deck.push({id: x++, num: 'Q', suit: 'C'});
-            deck.push({id: x++, num: 'K', suit: 'C'});
-            deck.push({id: x++, num: 'A', suit: 'C'});
+            newDeck.push({id: x++, num: '=', value: 10, suit: 'C'});
+            newDeck.push({id: x++, num: 'J', value: 10, suit: 'C'});
+            newDeck.push({id: x++, num: 'Q', value: 10, suit: 'C'});
+            newDeck.push({id: x++, num: 'K', value: 10, suit: 'C'});
+            newDeck.push({id: x++, num: 'A', value: 11, suit: 'C'});
         
             //HEARTS CARDS:
             for(let i = 2; i <= 9; i++)
             {
-                let card = {id: x++, num: i, suit: 'H'};
-                deck.push(card);
+                let card = {id: x++, num: i, value: i, suit: 'H'};
+                newDeck.push(card);
             }
-            deck.push({id: x++, num: '=', suit: 'H'});
-            deck.push({id: x++, num: 'J', suit: 'H'});
-            deck.push({id: x++, num: 'Q', suit: 'H'});
-            deck.push({id: x++, num: 'K', suit: 'H'});
-            deck.push({id: x++, num: 'A', suit: 'H'});
+            newDeck.push({id: x++, num: '=', value: 10, suit: 'H'});
+            newDeck.push({id: x++, num: 'J', value: 10, suit: 'H'});
+            newDeck.push({id: x++, num: 'Q', value: 10, suit: 'H'});
+            newDeck.push({id: x++, num: 'K', value: 10, suit: 'H'});
+            newDeck.push({id: x++, num: 'A', value: 11, suit: 'H'});
         
             //DIAMONDS CARDS:
             for(let i = 2; i <= 9; i++)
             {
-                let card = {id: x++, num: i, suit: 'D'};
-                deck.push(card);
+                let card = {id: x++, num: i, value: i, suit: 'D'};
+                newDeck.push(card);
             }
-            deck.push({id: x++, num: '=', suit: 'D'});
-            deck.push({id: x++, num: 'J', suit: 'D'});
-            deck.push({id: x++, num: 'Q', suit: 'D'});
-            deck.push({id: x++, num: 'K', suit: 'D'});
-            deck.push({id: x++, num: 'A', suit: 'D'});
+            newDeck.push({id: x++, num: '=', value: 10, suit: 'D'});
+            newDeck.push({id: x++, num: 'J', value: 10, suit: 'D'});
+            newDeck.push({id: x++, num: 'Q', value: 10, suit: 'D'});
+            newDeck.push({id: x++, num: 'K', value: 10, suit: 'D'});
+            newDeck.push({id: x++, num: 'A', value: 11, suit: 'D'});
         }
         
-    }
-
-    function shuffle()
-    {
-        //shuffles deck
+        //Shuffle deck
         console.log("Shuffling deck...");
 
         //map and sort randomly
-        let shuffledDeck = deck
+        let shuffledDeck = newDeck
             .map(function(value) // pairs deck array with a new array of random values
             {
                 return { value: value, sort: Math.random() }
@@ -90,34 +118,56 @@ export default function game() {
                 return item.value;
             });
         
-        //overwrites deck with shuffled version of deck
-        deck = shuffledDeck;
+        //set deck state with shuffled version of deck
+        setDeck(shuffledDeck);
+        console.log(shuffledDeck);
     }
 
-    function dealCard(hand, x)
+    function dealCard(setHand, x)
     {
-        for(let i = 0; i < x; i++)
-        {
-            hand.push(deck.pop());
-        }
-        console.log(hand);
-    }
+        setDeck(prevDeck => {
+            const dealtCards = prevDeck.slice(-x);
+            setHand(prevHand => [...prevHand, ...dealtCards]);
+            return prevDeck.slice(0, -x);
+        });
+    }    
 
-    createDeck(2); // create deck
-    shuffle(deck); // shuffle it
-    dealCard(playerHand, 2); // deal cards to player
-    dealCard(dealerHand, 2); // deal cards to dealer
-    
+    function calcHandValue(hand)
+    {
+        let total = 0;
+        hand.forEach(function(card)
+        {
+            total += card.value;
+        });
+        console.log(total);
+        return total;
+    }
 
   return (
     <div className="page">
         <CardContainer hand={dealerHand}/>
-            <div className="tab-dealer">Dealer</div>
-            <div className="gap" />
-            <div className="tab-player">Player</div>
+            <div className="right">
+                <div className="tab-dealer">
+                    Dealer
+                </div>
+            </div>
+            
+            <div className="points-container">
+                <Points points={playerPoints} />
+                    vs.
+                <Points points={dealerPoints} />
+            </div>
+            <div className="left">
+                <div className="tab-player">
+                    Player
+                </div>
+            </div>
+            
         <CardContainer hand={playerHand}/>
-        <div />
-        <Button onClick={() => dealCard(playerHand, 1)} className="button" variant="primary">Deal</Button>
+        <div>
+            <Button onClick={() => dealCard(setPlayerHand, 1)} className="button" variant="outline-light" size="lg">Hit</Button>
+            <Button onClick={() => dealCard(setPlayerHand, 1)} className="button" variant="outline-light" size="lg">Stay</Button>
+        </div>
     </div>
   )
 }
