@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import './pages.css';
 import CardContainer from '../game components/card-container/card-container.jsx';
 import Points from '../game components/points/points.jsx';
@@ -23,6 +23,9 @@ export default function Game() {
     //point states are point totals of cards in each player's hands
     const [playerPoints, setPlayerPoints] = useState(0);
     const [dealerPoints, setDealerPoints] = useState(0);
+
+    //uses a ref to store the latest value of dealerPoints for use in rapid-fire calculations when the dealer AI deals cards to itself (the internet told me to)
+    const dealerPointsRef = useRef(dealerPoints);
 
     //total points is the combined total of all of the winning hands before the player lost
     const [totalPoints, setTotalPoints] = useState(0);
@@ -63,13 +66,15 @@ export default function Game() {
         let newTotal = calcHandValue(dealerHand)
         setDealerPoints(newTotal);
 
-        //check if dealer loses
-        if(newTotal > 21)
-        {
-            console.log("YOU WIN");
-        }
+        //DO NOT PUT WHILE LOOP IN EFFECT HOOK, APPARENTLY
 
     }, [dealerHand]);
+
+    //updates dealerPointsRef whenever dealerPoints changes (more dealer AI stuff)
+    useEffect(() =>
+    {
+        dealerPointsRef.current = dealerPoints;
+    }, [dealerPoints]);
 
     //handle bootstrap Modal
     function handleShow()
@@ -221,7 +226,18 @@ export default function Game() {
     //player clicks "stay" (dealer's AI takes over)
     function stay()
     {
-        dealCard(setDealerHand, 1)
+        //keep dealing cards to dealer until they have at least 17 points
+        const interval = setInterval(() =>
+        {
+            if (dealerPointsRef.current < 17)
+            {
+                dealCard(setDealerHand, 1);
+            }
+            else
+            {
+                clearInterval(interval);
+            }
+        }, 800);
     }
 
   return (
