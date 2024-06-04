@@ -3,9 +3,9 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
 
-import ScoreForm from '../score-form/score-form.jsx';
-import Score from '../score/score.jsx';
-import { scoreAPI } from '../../rest/scoreAPI.js';
+import ScoreForm from '../../high score components/score-form/score-form.jsx';
+import Score from '../../high score components/score/score.jsx';
+import { scoreAPI } from '../../../rest/scoreAPI.js';
 
 export default function ScoreList() {
 
