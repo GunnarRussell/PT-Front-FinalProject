@@ -1,9 +1,15 @@
 import React, { useEffect, useState, useRef } from 'react';
+
 import './pages.css';
+
+//IMPORT CUSTOM COMPONENTS
 import CardContainer from '../game components/card-container/card-container.jsx';
+import LifeContainer from '../game components/life-container/life-container.jsx';
 import Points from '../game components/points/points.jsx';
 import CurrentScore from '../game components/current-score/current-score.jsx';
+import InfoBar from '../game components/info-bar/info-bar.jsx';
 
+//IMPORT BOOTSTRAP COMPONENTS
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
@@ -30,17 +36,25 @@ export default function Game() {
     //total points is the combined total of all of the winning hands before the player lost
     const [totalPoints, setTotalPoints] = useState(0);
 
-    //Bootstrap modal, state is bool: visible or hidden
-    const [show, setShow] = useState(false);
+    //lives, starts at 5 and lowers every time you lose
+    const [lives, setLives] = useState(5);
+
+    //Bootstrap modals, state is bool: visible or hidden
+    //Game Over message
+    const [showGameOver, setShowGameOver] = useState(false);
+
+    //Win/Lose message
+    const [showResult, setShowResult] = useState(false);
+    const [result, setResult] = useState("");
+    
     
     //EFFECT HOOKS
 
     //updates every render (since the dependency array listed afterwards is empty)
     useEffect(() => 
     { 
-        createDeck(2); // create deck(s)
-        dealCard(setPlayerHand, 2); // deal cards to player
-        dealCard(setDealerHand, 1); // deal cards to dealer
+        //empty both hands, create deck, shuffle it, deal cards
+        newGame();
     }, []);
 
     //updates whenever playerHand changes
@@ -53,8 +67,28 @@ export default function Game() {
         //check if player loses
         if(newTotal > 21)
         {
+            //change points to red
+
+
             //show game over modal after delay so player can see they lost
-            setTimeout(() => { handleShow(); }, 700);
+            setTimeout(() => { 
+                handleResultShow("BUST"); 
+                //close result after delay
+                setTimeout(() => { 
+                  handleResultClose();
+
+                  //lose a life
+                  let newLives = lives - 1;
+                  setLives(newLives);
+
+                  //start new round
+                  newGame();
+                }, 800);
+            }, 800);
+
+            //change points back to white
+
+            
         }
 
     }, [playerHand]);
@@ -76,15 +110,38 @@ export default function Game() {
         dealerPointsRef.current = dealerPoints;
     }, [dealerPoints]);
 
-    //handle bootstrap Modal
-    function handleShow()
+    //updates whenever lives changes
+    useEffect(() =>
     {
-        setShow(true);
+        //If 0 lives, game over
+        if (lives < 1)
+        {
+            handleGameOverShow();
+        }
+    }, [lives]);
+
+    //Handle bootstrap Modals:
+    //Game Over modals:
+    function handleGameOverShow()
+    {
+        setShowGameOver(true);
     }
     
-    function handleClose()
+    function handleGameOverClose()
     {
-        setShow(false);
+        setShowGameOver(false);
+    }
+
+    //HANDLE MODALS
+    function handleResultShow(newResult)
+    {
+        setShowResult(true);
+        setResult(newResult);
+    }
+
+    function handleResultClose()
+    {
+        setShowResult(false);
     }
 
     //BLACKJACK COMPUTATION:
@@ -182,7 +239,17 @@ export default function Game() {
             setHand(prevHand => [...prevHand, ...dealtCards]);
             return prevDeck.slice(0, -x);
         });
-    }    
+    }  
+    
+    //start new game
+    function newGame()
+    {
+        setPlayerHand([]);
+        setDealerHand([]);
+        createDeck(2); // create deck(s)
+        dealCard(setPlayerHand, 2); // deal cards to player
+        dealCard(setDealerHand, 1); // deal cards to dealer
+    }
 
     //calculate total value of cards in given hand
     function calcHandValue(hand)
@@ -231,18 +298,70 @@ export default function Game() {
         {
             if (dealerPointsRef.current < 17)
             {
+                //dealer stays on 17 or higher, deal card otherwise
                 dealCard(setDealerHand, 1);
             }
             else
             {
+                //once total is 17 or higher:
                 clearInterval(interval);
+
+                //determine who wins
+                console.log(`player: ${playerPoints} dealer: ${dealerPointsRef.current}`);
+                if(playerPoints > dealerPointsRef.current || dealerPointsRef.current > 21)
+                {
+                    //if player has more points or if dealer busts
+
+                    //show "YOU WIN" for a half second
+                    setTimeout(() => { }, 800);
+                    handleResultShow("WIN");
+                    setTimeout(() => { handleResultClose(); }, 800);
+
+                    //add points to total score
+                    setTotalPoints(totalPoints + playerPoints)
+                }
+                else if(playerPoints < dealerPointsRef.current && dealerPointsRef.current < 22)
+                {
+                    //if player has less points than dealer and dealer didn't bust
+
+                    //show "YOU LOSE" for a half second
+                    setTimeout(() => { }, 800);
+                    handleResultShow("LOSE");
+                    setTimeout(() => {              handleResultClose();
+                        let newLives = lives - 1;
+                        setLives(newLives);
+                     }, 800);
+
+                    //TODO: remove 1 life
+                }
+                else
+                {
+                    //if both player and dealer tie
+
+                    //show "YOU TIE" for a half second
+                    setTimeout(() => { }, 800);
+                    handleResultShow("PUSH");
+                    setTimeout(() => { handleResultClose(); }, 800);
+                }
+
+                //start new round
+                setTimeout(() => { newGame(); }, 800);
+                
             }
         }, 800);
+
+        
+
     }
 
   return (
     <div className="page">
-        <CurrentScore score=""/>
+
+        <div className="info-bar">
+            <LifeContainer lives={lives}/>
+            <CurrentScore score={totalPoints}/>
+        </div>
+        
         <CardContainer hand={dealerHand}/>
             <div className="right">
                 <div className="tab-dealer">
@@ -251,10 +370,11 @@ export default function Game() {
             </div>
             
             <div className="points-container">
-                <Points points={playerPoints} />
-                    vs.
-                <Points points={dealerPoints} />
+            <Points points={playerPoints} />
+                vs.
+            <Points points={dealerPoints} />
             </div>
+            
             <div className="left">
                 <div className="tab-player">
                     Player
@@ -268,9 +388,11 @@ export default function Game() {
         </div>
 
         {/* Modals */}
+
+        {/* Game Over Modal */}
         <Modal
-            show={show}
-            onHide={handleClose}
+            show={showGameOver}
+            onHide={handleGameOverClose}
             backdrop="static"
             centered
         >
@@ -278,8 +400,22 @@ export default function Game() {
                 <Modal.Title>Game Over!</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                asdfasdfasdf
+                You lost all of your lives. Your final score was {totalPoints}! Try again?
             </Modal.Body>
+            <Modal.Footer>
+                <Button variant="primary">Retry</Button>
+            </Modal.Footer>
+        </Modal>
+
+        {/* Win/Lose/Tie/Bust Modal */}
+        <Modal
+            show={showResult}
+            onHide={handleResultClose}
+            backdrop="static"
+            centered
+            className="result"
+        >
+            {result}
         </Modal>
     </div>
   )

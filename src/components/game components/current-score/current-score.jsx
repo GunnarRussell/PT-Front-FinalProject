@@ -1,9 +1,10 @@
 import React from 'react'
 
-export default function CurrentScore() {
+export default function CurrentScore(props) {
+  const { score } = props;
   return (
     <div>
-        current score
+        {score}
     </div>
   )
 }

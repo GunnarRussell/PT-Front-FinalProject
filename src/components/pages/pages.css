@@ -31,6 +31,7 @@
 
 .left
 {
+  display: flex;
   position: relative;
   right: 25%;
 }
@@ -69,8 +70,56 @@
   /* background-color: rgba(0, 0, 0, 0.083); */
 }
 
+.info-bar
+{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+
+  padding: 10px;
+  margin-bottom: 10px;
+
+  color: #ffffff;
+  font-size: 3vh;
+  background-color: rgb(0, 0, 0, .15);
+
+  border-style: solid;
+  border-radius: 7px;
+  border-width: 0px;
+
+  width: 90%;
+}
+
 .button
 {
   width: 300px;
   margin: 10px 5px;
+}
+
+.result .modal-content
+{
+  background-color: rgba(0, 0, 0, 0);
+  border-style: none;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 8vh;
+  font-family: 'ArchivoBlack';
+
+  /* Text gradient */
+  background: linear-gradient(#ffffff, #4b4b4b);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+
+  /* Text outline */
+  -webkit-text-stroke: 2px rgb(34, 34, 34);
+}
+
+
+@font-face
+{
+  font-family: 'ArchivoBlack';
+  src: url(../../assets/fonts/ArchivoBlack.ttf) format('truetype');
+  font-stretch: condensed;
 }
