@@ -36,7 +36,7 @@ export default function Game() {
     const [totalPoints, setTotalPoints] = useState(0);
 
     //lives, starts at 5 and lowers every time you lose
-    const [lives, setLives] = useState(1);
+    const [lives, setLives] = useState(5);
 
     //disable/enable buttons to prevent button spam
     const [buttonDisabled, setButtonDisabled] = useState(false);
