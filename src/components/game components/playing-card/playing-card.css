@@ -50,8 +50,21 @@
     font-family: 'ChardCharacters';
 }
 
+/* FADE IN */
+.fade-enter
+{
+    opacity: 0;
+    transition: opacity 0.5s ease-in;
+}
+  
+.fade-enter-active
+{
+    opacity: 1;
+}
+
 @font-face
 {
   font-family: 'ChardCharacters';
   src: url(../../../assets/fonts/ChardCharacters.TTF) format('truetype');
+  font-style: normal;
 }

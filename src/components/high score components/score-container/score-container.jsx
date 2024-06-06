@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import ScoreList from '../high score components/score-list/score-list.jsx';
-import { scoreAPI } from '../../rest/scoreAPI.js';
 
-export default function ScoreContainer() {
+import ScoreForm from '../score-form/score-form.jsx';
+import ScoreList from '../score-list/score-list.jsx';
+import { scoreAPI } from '../../../rest/scoreAPI.js';
+
+export default function ScoreContainer(props) {
+
+    const { score, handleScoreTableClose } = props;
 
     //STATE HOOK
     //array of score fetched from API
@@ -41,6 +45,16 @@ export default function ScoreContainer() {
         fetchScores();
     };
 
+    //createScore
+    async function createScore(newScore)
+    {
+      //passes new score to the scoresAPI POST method in order to create it
+      await scoreAPI.post(newScore)
+
+      //call fetchScores method in order to set state (score) to array of newly created and fetched scores
+      fetchScores();
+    }
+
     //deleteScore
     async function deleteScore(score)
     {
@@ -52,12 +66,18 @@ export default function ScoreContainer() {
     }
 
   return (
-    <div className="page">
+    <>
         <ScoreList 
             scores = {scores}
             updateScore = {updateScore}
             deleteScore = {deleteScore}
         />
-    </div>
+        <ScoreForm 
+            score = {score}
+            totalScores = {scores}
+            createScore = {createScore}
+            handleScoreTableClose = {handleScoreTableClose}
+        />
+    </>
   )
 }

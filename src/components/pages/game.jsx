@@ -4,10 +4,9 @@ import './pages.css';
 
 //IMPORT CUSTOM COMPONENTS
 import CardContainer from '../game components/card-container/card-container.jsx';
-import LifeContainer from '../game components/life-container/life-container.jsx';
 import Points from '../game components/points/points.jsx';
-import CurrentScore from '../game components/current-score/current-score.jsx';
 import InfoBar from '../game components/info-bar/info-bar.jsx';
+import ScoreContainer from '../high score components/score-container/score-container.jsx';
 
 //IMPORT BOOTSTRAP COMPONENTS
 import Button from 'react-bootstrap/Button';
@@ -37,7 +36,10 @@ export default function Game() {
     const [totalPoints, setTotalPoints] = useState(0);
 
     //lives, starts at 5 and lowers every time you lose
-    const [lives, setLives] = useState(5);
+    const [lives, setLives] = useState(1);
+
+    //disable/enable buttons to prevent button spam
+    const [buttonDisabled, setButtonDisabled] = useState(false);
 
     //Bootstrap modals, state is bool: visible or hidden
     //Game Over message
@@ -46,6 +48,9 @@ export default function Game() {
     //Win/Lose message
     const [showResult, setShowResult] = useState(false);
     const [result, setResult] = useState("");
+
+    //Score Table
+    const[showScoreTable, setShowScoreTable] = useState(false);
     
     
     //EFFECT HOOKS
@@ -67,8 +72,6 @@ export default function Game() {
         //check if player loses
         if(newTotal > 21)
         {
-            //change points to red
-
 
             //show game over modal after delay so player can see they lost
             setTimeout(() => { 
@@ -85,11 +88,9 @@ export default function Game() {
                   newGame();
                 }, 800);
             }, 800);
-
-            //change points back to white
-
             
         }
+
 
     }, [playerHand]);
 
@@ -120,19 +121,37 @@ export default function Game() {
         }
     }, [lives]);
 
-    //Handle bootstrap Modals:
-    //Game Over modals:
+    //HANDLE MODALS
+
+    //Game Over show
     function handleGameOverShow()
     {
         setShowGameOver(true);
     }
     
-    function handleGameOverClose()
+    //Game Over - retry button
+    function handleGameOverRetry()
     {
         setShowGameOver(false);
+        setTotalPoints(0);
+        setLives(5);
+        newGame();
     }
 
-    //HANDLE MODALS
+    //Game Over - close
+    function handleGameOverScores()
+    {
+        setShowGameOver(false);
+
+        //show high score table after small delay to account for animation
+        setTimeout(() =>
+        { 
+            setShowScoreTable(true);
+        }, 300);
+
+    }
+
+    //WIN, LOSE, or DRAW, shows result of round
     function handleResultShow(newResult)
     {
         setShowResult(true);
@@ -142,6 +161,18 @@ export default function Game() {
     function handleResultClose()
     {
         setShowResult(false);
+        setButtonDisabled(false);
+    }
+
+    //High Score Table
+    function handleScoreTableClose()
+    {
+        setShowScoreTable(false);
+
+        //start new game
+        setTotalPoints(0);
+        setLives(5);
+        newGame();
     }
 
     //BLACKJACK COMPUTATION:
@@ -287,12 +318,15 @@ export default function Game() {
     //player clicks "hit"
     function hit()
     {
+        setButtonDisabled(true);
+        setTimeout(() => { setButtonDisabled(false); }, 800);
         dealCard(setPlayerHand, 1)
     }
 
     //player clicks "stay" (dealer's AI takes over)
     function stay()
     {
+        setButtonDisabled(true);
         //keep dealing cards to dealer until they have at least 17 points
         const interval = setInterval(() =>
         {
@@ -314,7 +348,7 @@ export default function Game() {
 
                     //show "YOU WIN" for a half second
                     setTimeout(() => { }, 800);
-                    handleResultShow("WIN");
+                    handleResultShow("WIN!");
                     setTimeout(() => { handleResultClose(); }, 800);
 
                     //add points to total score
@@ -326,7 +360,7 @@ export default function Game() {
 
                     //show "YOU LOSE" for a half second
                     setTimeout(() => { }, 800);
-                    handleResultShow("LOSE");
+                    handleResultShow("LOSE...");
                     setTimeout(() => {              handleResultClose();
                         let newLives = lives - 1;
                         setLives(newLives);
@@ -356,17 +390,14 @@ export default function Game() {
 
   return (
     <div className="page">
-
-        <div className="info-bar">
-            <LifeContainer lives={lives}/>
-            <CurrentScore score={totalPoints}/>
-        </div>
+        {/* Info Bar */}
+        <InfoBar lives={lives} totalPoints={totalPoints} />
         
+        {/* Dealer's Hand */}
         <CardContainer hand={dealerHand}/>
-            <div className="right">
-                <div className="tab-dealer">
-                    Dealer
-                </div>
+            {/* Dealer's Name */}
+            <div className="right tab-dealer">
+                Dealer
             </div>
             
             <div className="points-container">
@@ -383,8 +414,24 @@ export default function Game() {
             
         <CardContainer hand={playerHand}/>
         <div>
-            <Button onClick={hit} className="button" variant="outline-light" size="lg">Hit</Button>
-            <Button onClick={stay} className="button" variant="outline-light" size="lg">Stay</Button>
+            <Button 
+                onClick={hit}
+                className="button" 
+                variant="outline-light" 
+                size="lg"
+                disabled={buttonDisabled}
+            >
+                Hit
+            </Button>
+            <Button 
+                onClick={stay} 
+                className="button" 
+                variant="outline-light" 
+                size="lg"
+                disabled={buttonDisabled}
+            >
+                Stay
+            </Button>
         </div>
 
         {/* Modals */}
@@ -392,18 +439,19 @@ export default function Game() {
         {/* Game Over Modal */}
         <Modal
             show={showGameOver}
-            onHide={handleGameOverClose}
+            onHide={handleGameOverRetry}
             backdrop="static"
             centered
         >
-            <Modal.Header closeButton>
+            <Modal.Header>
                 <Modal.Title>Game Over!</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                You lost all of your lives. Your final score was {totalPoints}! Try again?
+                Your final score was {totalPoints}. Try again?
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="primary">Retry</Button>
+                <Button variant="primary" onClick={handleGameOverScores}>Submit Score</Button>
+                <Button variant="danger" onClick={handleGameOverRetry}>Retry</Button>
             </Modal.Footer>
         </Modal>
 
@@ -413,9 +461,20 @@ export default function Game() {
             onHide={handleResultClose}
             backdrop="static"
             centered
-            className="result"
+            className="result-modal"
         >
             {result}
+        </Modal>
+
+        {/* Submit Score Modal */}
+        <Modal
+            show={showScoreTable}
+            onHide={handleScoreTableClose}
+            backdrop="static"
+            className="score-modal"
+            centered
+        >
+            <ScoreContainer score={totalPoints} handleScoreTableClose={handleScoreTableClose}/>
         </Modal>
     </div>
   )
