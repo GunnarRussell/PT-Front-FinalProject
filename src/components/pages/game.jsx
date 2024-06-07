@@ -360,7 +360,7 @@ export default function Game() {
 
                     //show "YOU LOSE" for a half second
                     setTimeout(() => { }, 800);
-                    handleResultShow("LOSE...");
+                    handleResultShow("LOSE");
                     setTimeout(() => {              handleResultClose();
                         let newLives = lives - 1;
                         setLives(newLives);
@@ -474,7 +474,10 @@ export default function Game() {
             className="score-modal"
             centered
         >
-            <ScoreContainer score={totalPoints} handleScoreTableClose={handleScoreTableClose}/>
+            <ScoreContainer
+                score={totalPoints} 
+                handleScoreTableClose={handleScoreTableClose}
+            />
         </Modal>
     </div>
   )

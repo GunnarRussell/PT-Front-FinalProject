@@ -1,7 +1,7 @@
 import React from 'react';
 import ListGroup from 'react-bootstrap/ListGroup';
-import CloseButton from 'react-bootstrap/CloseButton';
 import Button from 'react-bootstrap/Button';
+import './score.css';
 
 export default function Score(props) {
     const {score, updateScore, deleteScore} = props;
@@ -14,7 +14,17 @@ export default function Score(props) {
 
   return (
     <>
-        <ListGroup.Item>{score.score} {score.name} <Button onClick={deleteButton}>X</Button></ListGroup.Item>
+        <ListGroup.Item className="score">
+          <ul>
+            <li>
+              {score.name}
+            </li>
+            <li>
+              {score.score}
+            </li>
+              <Button className="close" onClick={deleteButton}>X</Button>
+          </ul>
+        </ListGroup.Item>
     </>
   )
 }

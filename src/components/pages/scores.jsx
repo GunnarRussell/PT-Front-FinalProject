@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import ScoreList from '../high score components/score-list/score-list.jsx';
 import { scoreAPI } from '../../rest/scoreAPI.js';
 
+import Card from 'react-bootstrap/ListGroup';
+
 export default function ScoreContainer() {
 
     //STATE HOOK
@@ -53,11 +55,13 @@ export default function ScoreContainer() {
 
   return (
     <div className="page">
+      <div className="score-box">
         <ScoreList 
             scores = {scores}
             updateScore = {updateScore}
             deleteScore = {deleteScore}
         />
+      </div>
     </div>
   )
 }

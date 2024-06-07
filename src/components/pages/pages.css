@@ -91,13 +91,13 @@
   font-family: 'ArchivoBlack';
 
   /* Text gradient */
-  background: linear-gradient(#ffffff, #4b4b4b);
+  background: linear-gradient(#363636, #000000);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 
   /* Text outline */
-  -webkit-text-stroke: 2px rgb(34, 34, 34);
+  -webkit-text-stroke: 2px rgb(255, 255, 255);
 }
 
 .score-modal .modal-content
@@ -105,6 +105,18 @@
   padding: 10px;
 }
 
+.score-box
+{
+  width: 60%;
+  height: 60vh;
+  border-style: none;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+
+}
 
 @font-face
 {
