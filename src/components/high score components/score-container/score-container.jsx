@@ -4,8 +4,6 @@ import ScoreForm from '../score-form/score-form.jsx';
 import ScoreList from '../score-list/score-list.jsx';
 import { scoreAPI } from '../../../rest/scoreAPI.js';
 
-import './score-container.css';
-
 export default function ScoreContainer(props) {
 
     const { score, handleScoreTableClose } = props;
