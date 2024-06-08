@@ -366,11 +366,11 @@ export default function Game() {
                     setTimeout(() => { }, 800);
                     handleResultShow("LOSE");
                     setTimeout(() => {              handleResultClose();
+                        //lose a life
                         let newLives = lives - 1;
                         setLives(newLives);
                      }, 800);
 
-                    //TODO: remove 1 life
                 }
                 else
                 {
