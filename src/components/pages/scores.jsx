@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import ScoreList from '../high score components/score-list/score-list.jsx';
 import { scoreAPI } from '../../rest/scoreAPI.js';
 
-import Card from 'react-bootstrap/ListGroup';
-
 export default function ScoreContainer() {
 
     //STATE HOOK

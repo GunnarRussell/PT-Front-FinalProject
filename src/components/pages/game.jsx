@@ -14,8 +14,9 @@ import Modal from 'react-bootstrap/Modal';
 
 export default function Game() {
 
-    //LIVES
+    //CONSTANTS
     const startingLives = 5;
+    const numberOfDecks = 3;
 
     //STATE HOOKS
 
@@ -280,7 +281,7 @@ export default function Game() {
     {
         setPlayerHand([]);
         setDealerHand([]);
-        createDeck(2); // create deck(s)
+        createDeck(numberOfDecks); // create deck(s)
         dealCard(setPlayerHand, 2); // deal cards to player
         dealCard(setDealerHand, 1); // deal cards to dealer
     }
