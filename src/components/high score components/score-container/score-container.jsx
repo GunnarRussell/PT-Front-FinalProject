@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
+import './score-container.css';
+
 import ScoreForm from '../score-form/score-form.jsx';
 import ScoreList from '../score-list/score-list.jsx';
 import { scoreAPI } from '../../../rest/scoreAPI.js';
@@ -66,7 +68,10 @@ export default function ScoreContainer(props) {
     }
 
   return (
-    <div>
+    <>
+        <div className="your-score">
+          <h1>Your score was {score}!</h1>
+        </div>
         <ScoreList 
             scores = {scores}
             updateScore = {updateScore}
@@ -78,6 +83,6 @@ export default function ScoreContainer(props) {
             createScore = {createScore}
             handleScoreTableClose = {handleScoreTableClose}
         />
-    </div>
+    </>
   )
 }

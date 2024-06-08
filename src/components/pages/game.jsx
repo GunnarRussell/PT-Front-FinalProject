@@ -14,6 +14,9 @@ import Modal from 'react-bootstrap/Modal';
 
 export default function Game() {
 
+    //LIVES
+    const startingLives = 5;
+
     //STATE HOOKS
 
     //hand states are arrays of card objects
@@ -36,7 +39,7 @@ export default function Game() {
     const [totalPoints, setTotalPoints] = useState(0);
 
     //lives, starts at 5 and lowers every time you lose
-    const [lives, setLives] = useState(5);
+    const [lives, setLives] = useState(startingLives);
 
     //disable/enable buttons to prevent button spam
     const [buttonDisabled, setButtonDisabled] = useState(false);
@@ -134,7 +137,7 @@ export default function Game() {
     {
         setShowGameOver(false);
         setTotalPoints(0);
-        setLives(5);
+        setLives(startingLives);
         newGame();
     }
 
@@ -171,7 +174,7 @@ export default function Game() {
 
         //start new game
         setTotalPoints(0);
-        setLives(5);
+        setLives(startingLives);
         newGame();
     }
 

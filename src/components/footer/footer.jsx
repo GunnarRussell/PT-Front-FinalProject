@@ -5,8 +5,7 @@ export default function footer() {
   return (
     <div className="footer">
         <ul>
-            <li>Gunnar Russell, {new Date().getFullYear()}</li>
-            <li>Contact</li>
+            <li>made by gunnar russell, {new Date().getFullYear()}</li>
         </ul>
     </div>
   )

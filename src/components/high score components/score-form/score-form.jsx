@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 
+import './score-form.css';
+
 export default function ScoreForm(props) {
   //state hooks for name and comment input fields
   const [inputName, setInputName] = useState("");
@@ -53,7 +55,10 @@ return (
       {/* New Score Form */}
       <div className="jumbotron card shadow-sm new-comment-box">
           {/* Input Name, uses onChange event to read input */}
-          <input type="text" onChange={handleNameChange} value={inputName} className="form-control w-100" placeholder="Your Name"/>
+          <input type="text"
+            onChange={handleNameChange}
+            value={inputName}
+            className="form-control w-100" placeholder="Your Name"/>
           
         {/* Submit Button */}
         <Button

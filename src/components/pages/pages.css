@@ -78,6 +78,7 @@
   width: 300px;
   margin: 10px 5px;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  border-width: 2px;
 }
 
 .result-modal .modal-content
@@ -116,6 +117,27 @@
   align-items: center;
   background-color: white;
 
+}
+
+.how-to-play
+{
+  width: 80%;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  
+}
+
+.how-to-play ul li
+{
+  list-style:disc;
+}
+
+.text-button
+{
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 3px;
+  padding: 1px 3px;
+  margin: 1px;
 }
 
 @font-face
